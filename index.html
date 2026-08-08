@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070509">
+<title>Оракул банды Недбай</title>
+<style>
+:root{
+  --bg:#080609; --bg2:#130810; --wine:#2b0e1f; --wine2:#4a1732;
+  --gold:#d4a94f; --gold2:#f0d282; --cream:#f6e8c9; --muted:#b8a88f;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--cream)}
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:
+    radial-gradient(circle at 15% 10%,rgba(99,28,62,.34),transparent 26%),
+    radial-gradient(circle at 88% 12%,rgba(85,21,54,.26),transparent 24%),
+    linear-gradient(180deg,#0e090e 0%,#070508 100%);
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.48;
+  background-image:
+    radial-gradient(circle,#e4bd66 0 1px,transparent 1.4px),
+    radial-gradient(circle,#f4d98f 0 1px,transparent 1.4px),
+    radial-gradient(circle,#a56d49 0 .8px,transparent 1.2px);
+  background-size:86px 86px,137px 137px,113px 113px;
+  background-position:17px 9px,41px 57px,73px 18px;
+}
+.app{width:min(520px,100%);margin:auto;min-height:100vh}
+.screen{
+  display:none;min-height:100vh;position:relative;overflow:hidden;
+  padding:32px 24px 28px;text-align:center
+}
+.screen.active{display:flex;flex-direction:column;justify-content:center;animation:fade .5s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+.kicker{
+  color:var(--gold2);font-size:11px;letter-spacing:.24em;text-transform:uppercase;
+  font-weight:700;line-height:1.55
+}
+.serif,h1,h2,.result-title{font-family:Georgia,"Times New Roman",serif}
+h1{
+  font-size:clamp(50px,14vw,76px);line-height:.96;font-weight:400;
+  text-transform:uppercase;margin:18px 0 12px;color:var(--gold2);
+  text-shadow:0 0 22px rgba(212,169,79,.08)
+}
+h2{
+  font-size:clamp(50px,13vw,68px);line-height:1;font-weight:400;
+  margin:13px 0 16px;color:var(--gold2)
+}
+.copy{font-size:17px;line-height:1.48;color:#decfb9}
+.copy strong{color:var(--gold2)}
+.divider{display:flex;align-items:center;justify-content:center;gap:12px;color:var(--gold);margin:18px 0}
+.divider:before,.divider:after{content:"";height:1px;width:72px;background:linear-gradient(90deg,transparent,var(--gold))}
+.divider:after{background:linear-gradient(90deg,var(--gold),transparent)}
+
+.btn{
+  border:1px solid #d9ad51;border-radius:999px;padding:16px 28px;
+  background:linear-gradient(135deg,#f1d889,#d2a446);color:#130c09;
+  font-size:12px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;
+  box-shadow:0 10px 35px #0008;cursor:pointer;min-width:230px
+}
+.btn:active{transform:scale(.985)}
+.btn:disabled{opacity:.5;cursor:default}
+
+.small{font-size:11px;line-height:1.55;color:#8f8172;margin-top:13px}
+
+/* PAGE 1 */
+.hero-art{height:255px;position:relative;margin:-12px 0 6px}
+.hero-cloud{
+  position:absolute;border-radius:50%;filter:blur(1px);
+  background:radial-gradient(ellipse at center,rgba(106,42,70,.75),rgba(55,20,39,.35) 52%,transparent 72%);
+}
+.hero-cloud.c1{width:260px;height:95px;left:-65px;top:18px}
+.hero-cloud.c2{width:230px;height:95px;right:-45px;top:70px}
+.hero-moon{
+  position:absolute;width:68px;height:68px;border-radius:50%;right:13%;top:18px;
+  background:radial-gradient(circle at 32% 28%,#bc877a 0 14%,#6f3047 38%,#2e1322 68%,#10090e 72%);
+  box-shadow:0 0 30px rgba(118,49,76,.4)
+}
+.route{
+  position:absolute;left:4%;right:22%;top:105px;height:125px;
+  border-top:2px dotted #d9ad51;border-radius:50%;transform:rotate(-18deg);opacity:.85
+}
+.route:after{
+  content:"♡";position:absolute;left:19%;top:48px;color:var(--gold2);font-size:26px;transform:rotate(18deg)
+}
+.plane-svg{position:absolute;width:150px;left:35%;top:50px;filter:drop-shadow(0 0 12px rgba(226,183,91,.4))}
+.globe{
+  height:180px;margin-top:10px;border-radius:50% 50% 0 0;position:relative;overflow:hidden;
+  background:radial-gradient(circle at 50% 100%,rgba(100,67,31,.35),transparent 65%)
+}
+.globe svg{width:100%;height:100%;opacity:.8}
+
+/* PAGE 2 */
+.warning-box{
+  position:relative;border:1px solid var(--gold);padding:30px 26px 215px;margin:8px auto 20px;
+  width:min(390px,95%);background:linear-gradient(180deg,rgba(20,10,15,.9),rgba(8,6,8,.96));
+  box-shadow:inset 0 0 35px rgba(126,72,33,.06)
+}
+.warning-box:before,.warning-box:after{
+  content:"✦";position:absolute;left:50%;transform:translateX(-50%);
+  color:var(--gold);background:#0a0709;padding:0 10px
+}
+.warning-box:before{top:-10px}.warning-box:after{bottom:-10px}
+.vintage-scene{position:absolute;left:0;right:0;bottom:8px;height:205px;overflow:hidden}
+.vintage-scene .crescent{position:absolute;left:28px;top:40px;font-size:48px;color:var(--gold2);transform:rotate(-18deg)}
+.vintage-scene svg{position:absolute;width:285px;right:-8px;bottom:-10px;filter:drop-shadow(0 0 10px rgba(211,166,72,.18))}
+
+/* PAGE 3 */
+.deck{position:relative;width:350px;height:350px;margin:10px auto 6px}
+.card-back{
+  position:absolute;width:175px;height:262px;left:50%;top:36px;transform-origin:50% 88%;
+  border:1px solid #c29143;border-radius:16px;background:
+    radial-gradient(circle at 50% 43%,rgba(116,41,91,.35),transparent 48%),
+    linear-gradient(160deg,#2f1025,#160a14 70%);
+  box-shadow:0 22px 48px #000c
+}
+.card-back:before{
+  content:"";position:absolute;inset:12px;border:1px solid #8d6631;border-radius:11px;
+  background:
+    radial-gradient(circle at 50% 42%,transparent 0 42px,#a8783855 43px 44px,transparent 45px),
+    radial-gradient(circle at 50% 42%,transparent 0 68px,#a8783833 69px 70px,transparent 71px);
+}
+.card-back .world{
+  position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);
+  width:95px;height:95px;border:1px solid #b7853c;border-radius:50%
+}
+.card-back .world:before,.card-back .world:after{
+  content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:#9c6f34
+}
+.card-back .world:after{left:0;right:0;top:50%;height:1px;width:auto}
+.card-back .plane-mark{position:absolute;left:0;right:0;bottom:64px;color:var(--gold2);font-size:28px}
+.card-back .back-label{position:absolute;left:0;right:0;bottom:27px;color:var(--gold2);font:700 15px Georgia;letter-spacing:.05em}
+.card-back:nth-child(1){transform:translateX(-50%) rotate(-18deg)}
+.card-back:nth-child(2){transform:translateX(-50%) rotate(-9deg)}
+.card-back:nth-child(3){transform:translateX(-50%);z-index:3}
+.card-back:nth-child(4){transform:translateX(-50%) rotate(9deg)}
+.card-back:nth-child(5){transform:translateX(-50%) rotate(18deg)}
+.shuffle .card-back{animation:shuffle .75s ease-in-out}
+@keyframes shuffle{50%{transform:translateX(-50%) translateY(-28px) rotate(0deg)}}
+
+/* RESULT */
+.result-card{
+  width:min(360px,94vw);margin:10px auto 16px;padding:9px;border:1px solid var(--gold);
+  border-radius:18px;background:linear-gradient(160deg,#3b142b,#130a11);
+  box-shadow:0 22px 70px #000c
+}
+.result-inner{
+  min-height:470px;border:1px solid #79582f;border-radius:11px;padding:22px 18px;
+  display:flex;flex-direction:column;justify-content:space-between;overflow:hidden
+}
+.cat{font-size:9px;letter-spacing:.22em;color:#a9937c;text-transform:uppercase}
+.result-title{
+  font-size:clamp(30px,9vw,43px);line-height:1.02;text-transform:uppercase;color:var(--gold2);
+  overflow-wrap:anywhere;margin-top:10px
+}
+.result-text{font:clamp(18px,5vw,21px)/1.28 Georgia;color:#f6ead5;overflow-wrap:anywhere}
+.nam{font-weight:900;letter-spacing:.1em;color:var(--gold2);font-size:19px}
+.social-cta{margin:13px auto 15px;max-width:350px;color:#c6b39b;font-size:13px;line-height:1.55}
+.social-cta b{color:var(--gold2)}
+.result-note{font:700 20px/1.2 Georgia;color:var(--cream);margin:6px 0 4px}
+</style>
+</head>
+<body>
+<main class="app">
+
+<section id="home" class="screen active">
+  <div class="hero-art">
+    <div class="hero-cloud c1"></div><div class="hero-cloud c2"></div><div class="hero-moon"></div><div class="route"></div>
+    <svg class="plane-svg" viewBox="0 0 220 120" aria-hidden="true">
+      <g fill="#dfb85e" stroke="#f1d783" stroke-width="1.2">
+        <path d="M13 66 L203 48 L211 54 L202 61 L132 68 L91 105 L75 108 L91 71 L43 76 L25 95 L16 96 L27 75 L13 73 Z"/>
+        <path d="M91 61 L70 15 L84 14 L122 57 Z"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="kicker">С ДНЁМ ТУРИЗМА<br>ОТ @TATAKOMOTAKO</div>
+  <h1>ОРАКУЛ<br>БАНДЫ<br>НЕДБАЙ</h1>
+  <div class="divider">✦</div>
+  <div class="copy">Вытягивай. Смотри.<br>Спорь с оракулом.<br><strong>Ведь нам можно! 😂</strong></div>
+
+  <div class="globe">
+    <svg viewBox="0 0 500 220" aria-hidden="true">
+      <g fill="none" stroke="#9b7137" stroke-width="1.2">
+        <path d="M10 208 Q250 55 490 208"/>
+        <path d="M58 208 Q250 90 442 208"/>
+        <path d="M118 208 Q250 120 382 208"/>
+        <path d="M178 208 Q250 145 322 208"/>
+        <path d="M250 80 V220"/>
+        <path d="M110 130 Q250 155 390 130"/>
+        <path d="M55 165 Q250 190 445 165"/>
+      </g>
+    </svg>
+  </div>
+  <button id="enter" class="btn">ВОЙТИ В ОРАКУЛ</button>
+</section>
+
+<section id="warn" class="screen">
+  <div class="kicker">ОРАКУЛ БАНДЫ НЕДБАЙ</div>
+  <h2>Осторожно</h2>
+  <div class="divider">✦</div>
+
+  <div class="warning-box">
+    <div class="copy">
+      Этот оракул создан для людей, которые умеют продавать Мальдивы человеку с бюджетом на три ночи в Анапе.
+      <br><br>
+      Предсказания могут содержать <strong>деньги, туристов, внезапные брони</strong> и нецензурную правду.
+    </div>
+    <div class="vintage-scene">
+      <div class="crescent">☾</div>
+      <svg viewBox="0 0 420 220" aria-hidden="true">
+        <g fill="none" stroke="#c69648" stroke-width="2">
+          <path d="M55 145 C110 130 165 125 235 127"/>
+          <ellipse cx="240" cy="126" rx="44" ry="25"/>
+          <path d="M205 113 L150 66 L160 60 L245 108"/>
+          <path d="M267 109 L322 71 L330 76 L286 122"/>
+          <path d="M198 132 L113 150"/>
+          <path d="M280 132 L365 149"/>
+          <circle cx="225" cy="160" r="16"/><circle cx="287" cy="160" r="16"/>
+          <path d="M225 144 V160 M287 144 V160"/>
+          <path d="M193 128 L176 102 L187 98 L213 118"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <button id="ready" class="btn">Я ГОТОВА</button>
+</section>
+
+<section id="draw" class="screen">
+  <div class="kicker">ОРАКУЛ БАНДЫ НЕДБАЙ</div>
+  <h2>Выбери миг</h2>
+  <div class="divider">✦</div>
+  <div class="copy">
+    Одна карта.<br>
+    Один ответ.<br>
+    Остальное — болтовня туристов.<br>
+    <strong>Лови знак. И действуй.</strong>
+  </div>
+
+  <div id="deck" class="deck">
+    <div class="card-back"><div class="world"></div><div class="plane-mark">✈</div><div class="back-label">НАМ МОЖНО</div></div>
+    <div class="card-back"><div class="world"></div><div class="plane-mark">✈</div><div class="back-label">НАМ МОЖНО</div></div>
+    <div class="card-back"><div class="world"></div><div class="plane-mark">✈</div><div class="back-label">НАМ МОЖНО</div></div>
+    <div class="card-back"><div class="world"></div><div class="plane-mark">✈</div><div class="back-label">НАМ МОЖНО</div></div>
+    <div class="card-back"><div class="world"></div><div class="plane-mark">✈</div><div class="back-label">НАМ МОЖНО</div></div>
+  </div>
+
+  <button id="drawBtn" class="btn">ВЫТЯНУТЬ КАРТУ</button>
+  <div id="lockText" class="small">Судьба любит смелых<br>и турагентов с чувством юмора.</div>
+</section>
+
+<section id="result" class="screen">
+  <div class="kicker">ТЕБЕ ВЫПАЛО</div>
+  <div id="resultCard"></div>
+  <div class="result-note">Ну всё. Теперь живи с этим. 😏</div>
+  <div class="social-cta">
+    Покажи, что сегодня выпало именно тебе.<br>
+    <b>Выложи в сторис и отметь @tatakomotako ✈️</b>
+  </div>
+  <button id="shareBtn" class="btn">ПОДЕЛИТЬСЯ КАРТОЙ</button>
+  <div class="small">Одна карта в день. Следующая — завтра.</div>
+</section>
+
+</main>
+<script>
+const cards=[{"id":1,"title":"БОГАТЫЙ ТУРИСТ","text":"В этом году тебе встретится человек, который не спросит: «А можно дешевле?» Он спросит: «А что есть лучше?» Не пугайся. Это твоя большая комиссия.","category":"ДЕНЬГИ"},{"id":2,"title":"ЖИРНАЯ БРОНЬ","text":"Одна бронь принесёт тебе столько комиссии, что ты трижды откроешь банковское приложение просто посмотреть.","category":"ДЕНЬГИ"},{"id":3,"title":"БОЛЬШОЙ ЧЕК","text":"Ты назовёшь цену и приготовишься объяснять. В ответ услышишь: «Хорошо. Бронируем».","category":"ДЕНЬГИ"},{"id":4,"title":"ДЕНЕЖНЫЙ ПОНЕДЕЛЬНИК","text":"Один понедельник начнётся не с кофе, а с оплаты. Их будет несколько.","category":"ДЕНЬГИ"},{"id":5,"title":"ТРИ БРОНИ","text":"Три оплаты подряд. Без торга. Без «мы подумаем». Без нервного тика.","category":"ДЕНЬГИ"},{"id":6,"title":"ВЫСОКАЯ КОМИССИЯ","text":"Вселенная наконец-то решила компенсировать все твои бесплатные консультации.","category":"ДЕНЬГИ"},{"id":7,"title":"VIP","text":"В твоей жизни появится турист, которому не нужно дешевле. Ему нужно лучше.","category":"ДЕНЬГИ"},{"id":8,"title":"ЛЮКС","text":"Скоро слово «люкс» перестанет быть описанием чужого отдыха.","category":"ДЕНЬГИ"},{"id":9,"title":"БИЗНЕС-КЛАСС","text":"Однажды клиент скажет: «Эконом не рассматриваем». Постарайся не выдать себя лицом.","category":"ДЕНЬГИ"},{"id":10,"title":"НОВЫЙ РЕКОРД","text":"Ты побьёшь собственный рекорд продаж. И сначала не поверишь цифре.","category":"ДЕНЬГИ"},{"id":11,"title":"ВЕЛИКОЕ «ДА»","text":"После отправленной подборки тебе ответят: «Берём». И больше ничего не спросят.","category":"ПРОДАЖИ"},{"id":12,"title":"С ПЕРВОГО РАЗА","text":"Первый предложенный отель понравится всем. Даже свекрови.","category":"ПРОДАЖИ"},{"id":13,"title":"ЗАКРЫТАЯ СДЕЛКА","text":"Ты почувствуешь то самое приятное: «Вот. Я сделала это».","category":"ПРОДАЖИ"},{"id":14,"title":"САРАФАН","text":"Один довольный турист приведёт второго. Второй — третьего.","category":"ПРОДАЖИ"},{"id":15,"title":"СЛУЧАЙНЫЙ ЛИД","text":"Сообщение от незнакомого человека станет одной из лучших продаж года.","category":"ПРОДАЖИ"},{"id":16,"title":"РЕКОМЕНДАЦИЯ","text":"Тебя порекомендуют словами: «Она дороже, но иди только к ней».","category":"ПРОДАЖИ"},{"id":17,"title":"ПОВТОРНИК","text":"Старый турист вернётся. Бюджет у него будет уже совсем другой.","category":"ПРОДАЖИ"},{"id":18,"title":"ЛЁГКАЯ ПРОДАЖА","text":"Одна бронь окажется подозрительно простой. Не ищи подвох.","category":"ПРОДАЖИ"},{"id":19,"title":"ТВОЙ ЧАС","text":"Будет месяц, когда ты посмотришь на продажи и скажешь: «Нихуя себе».","category":"ПРОДАЖИ"},{"id":20,"title":"СВОЙ СТИЛЬ","text":"Ты перестанешь пытаться продавать «как надо» и начнёшь продавать так, как умеешь именно ты.","category":"ПРОДАЖИ"},{"id":21,"title":"МНЕ ТОЛЬКО СПРОСИТЬ","text":"Он пришёл просто узнать цены. Через час внесёт предоплату.","category":"ТУРИСТЫ"},{"id":22,"title":"БЛУДНЫЙ ТУРИСТ","text":"Тот, кто ушёл «ещё посмотреть», вернётся. Начнёт с: «Вы нас помните?»","category":"ТУРИСТЫ"},{"id":23,"title":"ТУРИСТ БЕЗ СКИДКИ","text":"Ты встретишь человека, который не попросит скидку. Запомни этот день.","category":"ТУРИСТЫ"},{"id":24,"title":"МОЛЧАЛИВЫЙ","text":"Он исчезнет после твоей подборки на 47 отелей. Через три месяца вернётся с паспортами.","category":"ТУРИСТЫ"},{"id":25,"title":"БОГАТЫЙ","text":"Он не спросит цену. Он спросит, что есть лучше.","category":"ТУРИСТЫ"},{"id":26,"title":"СЕМЬЯ ИЗ ВОСЬМИ","text":"У всех будут разные пожелания. Бюджет будет один. Ты справишься.","category":"ТУРИСТЫ"},{"id":27,"title":"МУЖ ПРОТИВ","text":"Отель выбрала жена. Дети согласны. Осталось победить финального босса.","category":"ТУРИСТЫ"},{"id":28,"title":"ПОДРУГА СКАЗАЛА","text":"В твою подборку вмешается человек, который знает о туризме всё. Потому что один раз был в Турции.","category":"ТУРИСТЫ"},{"id":29,"title":"ТИКТОК СКАЗАЛ","text":"Турист найдёт «секретный пляж без людей». Ты будешь объяснять, почему там 600 человек.","category":"ТУРИСТЫ"},{"id":30,"title":"А МЫ ПОДУМАЕМ","text":"На этот раз они действительно подумают. И вернутся.","category":"ТУРИСТЫ"},{"id":31,"title":"48-Й ОТЕЛЬ","text":"Ты покажешь 47 вариантов. Он выберет первый.","category":"БОЛЬ"},{"id":32,"title":"СВЯЩЕННЫЙ СКРИНШОТ","text":"Тебе пришлют цену дешевле. Другие даты. Другой отель. Другой город вылета. Но дешевле же.","category":"БОЛЬ"},{"id":33,"title":"ВЫЛЕТ ЗАВТРА","text":"«Нас пятеро. Хотим завтра. Недорого». Ты уже проходила страшнее.","category":"БОЛЬ"},{"id":34,"title":"ФИНАЛЬНАЯ ПОДБОРКА","text":"Ты напишешь «финальные варианты». Это будет ложь.","category":"БОЛЬ"},{"id":35,"title":"А НА БУКИНГЕ?","text":"Тебя ждёт разговор, который пережил уже несколько поколений турагентов.","category":"БОЛЬ"},{"id":36,"title":"А МОЖНО ДЕШЕВЛЕ?","text":"Можно. Но тогда это будет не тот отель, не те даты и не тот отпуск.","category":"БОЛЬ"},{"id":37,"title":"ОТЗЫВ 2014 ГОДА","text":"Турист найдёт единственный плохой отзыв об идеальном отеле. И сочтёт его самым достоверным.","category":"БОЛЬ"},{"id":38,"title":"ПАСПОРТ","text":"Ты попросишь паспорт. Турист пришлёт фотографию своей собаки.","category":"БОЛЬ"},{"id":39,"title":"ЗАГРАНПАСПОРТ","text":"Идеальный тур найден. И только сейчас выясняется, что паспорт заканчивается через месяц.","category":"БОЛЬ"},{"id":40,"title":"КОНДИЦИОНЕР","text":"Тебя спросят, какая температура будет в номере. Ты турагент, но теперь ещё и синоптик.","category":"БОЛЬ"},{"id":41,"title":"НОВАЯ СТРАНА","text":"На твоей карте мира появится новая страна. И на этот раз не только в презентации.","category":"ПУТЕШЕСТВИЯ"},{"id":42,"title":"МОРЕ","text":"Тебя ждёт море, солнце и несколько часов без сообщений «а где трансфер?».","category":"ПУТЕШЕСТВИЯ"},{"id":43,"title":"БИЛЕТ КУПЛЕН","text":"В какой-то момент билет уже будет куплен. И ты поймёшь: «Я реально лечу».","category":"ПУТЕШЕСТВИЯ"},{"id":44,"title":"ВНЕЗАПНЫЙ ОТПУСК","text":"Лучшая поездка года окажется той, которую ты почти не планировала.","category":"ПУТЕШЕСТВИЯ"},{"id":45,"title":"ПЕРВАЯ ЛИНИЯ","text":"Хватит говорить «мне всё равно, я только ночевать». Тебе не всё равно.","category":"ПУТЕШЕСТВИЯ"},{"id":46,"title":"МАЛЬДИВСКИЙ ЗНАК","text":"Ты слишком долго продаёшь рай другим. Пора проверить его лично.","category":"ПУТЕШЕСТВИЯ"},{"id":47,"title":"ЛУЧШИЙ ЗАКАТ","text":"Ты увидишь закат, который камера всё равно не передаст.","category":"ПУТЕШЕСТВИЯ"},{"id":48,"title":"НОВЫЕ ЛЮДИ","text":"Одна поездка познакомит тебя с человеком, который ещё сыграет роль в твоей жизни.","category":"ПУТЕШЕСТВИЯ"},{"id":49,"title":"АПГРЕЙД","text":"Твоя поездка окажется лучше, чем ты планировала.","category":"ПУТЕШЕСТВИЯ"},{"id":50,"title":"ОТПУСК","text":"Ты наконец-то поедешь отдыхать и не будешь открывать Booking каждые десять минут.","category":"ПУТЕШЕСТВИЯ"},{"id":51,"title":"НОВЫЙ УРОВЕНЬ","text":"То, что год назад казалось большой целью, станет обычным рабочим результатом.","category":"КАРЬЕРА"},{"id":52,"title":"УВЕРЕННОСТЬ","text":"Ты научишься говорить о своей цене без желания оправдаться.","category":"КАРЬЕРА"},{"id":53,"title":"СВОЯ АУДИТОРИЯ","text":"К тебе начнут приходить именно «твои» туристы.","category":"КАРЬЕРА"},{"id":54,"title":"ЭКСПЕРТ","text":"Ты поймёшь: тебе уже не нужно доказывать, что ты знаешь, что делаешь.","category":"КАРЬЕРА"},{"id":55,"title":"СМЕЛОСТЬ","text":"Ты откажешь клиенту, которого раньше боялась бы потерять.","category":"КАРЬЕРА"},{"id":56,"title":"РОСТ","text":"В этом году ты вырастешь сильнее, чем планировала.","category":"КАРЬЕРА"},{"id":57,"title":"НОВЫЙ ФОРМАТ","text":"Тебя ждёт идея, которая изменит твоё отношение к работе.","category":"КАРЬЕРА"},{"id":58,"title":"ИМЯ","text":"О твоей работе начнут говорить до того, как человек попадёт к тебе.","category":"КАРЬЕРА"},{"id":59,"title":"ЛИЧНЫЙ БРЕНД","text":"Одна твоя публикация приведёт больше клиентов, чем десять рекламных объявлений.","category":"КАРЬЕРА"},{"id":60,"title":"ЗВЕЗДА","text":"Ты станешь заметнее. И тебе это понравится.","category":"КАРЬЕРА"},{"id":61,"title":"СЛУЧАЙНОСТЬ","text":"Случайное сообщение окажется совсем не случайным.","category":"МАГИЯ"},{"id":62,"title":"ЗНАК","text":"В ближайшее время ты увидишь знак. Не игнорируй его.","category":"МАГИЯ"},{"id":63,"title":"ВОВРЕМЯ","text":"Ты окажешься в нужном месте в нужный момент.","category":"МАГИЯ"},{"id":64,"title":"ШАНС","text":"Тебе предложат то, чего ты не планировала. Соглашайся раньше, чем включится «а вдруг».","category":"МАГИЯ"},{"id":65,"title":"ВОЗВРАЩЕНИЕ","text":"То, что казалось закрытой историей, ещё даст о себе знать.","category":"МАГИЯ"},{"id":66,"title":"СЧАСТЛИВЫЙ ДЕНЬ","text":"Один день принесёт сразу несколько хороших новостей.","category":"МАГИЯ"},{"id":67,"title":"НЕОЖИДАННЫЕ ДЕНЬГИ","text":"Деньги придут оттуда, откуда ты их уже не ждала.","category":"МАГИЯ"},{"id":68,"title":"СОВПАДЕНИЕ","text":"Два события сложатся настолько идеально, что ты заподозришь магию.","category":"МАГИЯ"},{"id":69,"title":"ПОВОРОТ","text":"Небольшое изменение планов приведёт к гораздо лучшему результату.","category":"МАГИЯ"},{"id":70,"title":"ВСЁ СХОДИТСЯ","text":"То, что сейчас кажется набором случайностей, скоро сложится в картину.","category":"МАГИЯ"},{"id":71,"title":"ПАЛЬМЫ","text":"В твоей жизни станет больше пальм. Это хороший знак.","category":"РАЙ"},{"id":72,"title":"ПЛЯЖ","text":"Ты окажешься на пляже, который захочется никому не показывать.","category":"РАЙ"},{"id":73,"title":"КОКТЕЙЛЬ","text":"Один вечер будет настолько хорош, что телефон останется в сумке.","category":"РАЙ"},{"id":74,"title":"БЕЛЫЙ ПЕСОК","text":"Ты увидишь место, ради которого поймёшь, зачем вообще работаешь.","category":"РАЙ"},{"id":75,"title":"ЗАВТРАК С ВИДОМ","text":"Твой следующий красивый завтрак будет не на картинке из Pinterest.","category":"РАЙ"},{"id":76,"title":"СОЛНЦЕ","text":"После сложного периода наконец станет легче.","category":"РАЙ"},{"id":77,"title":"ТЁПЛЫЙ ВЕТЕР","text":"Ты получишь именно тот отдых, которого давно не хватало.","category":"РАЙ"},{"id":78,"title":"БАССЕЙН","text":"Иногда лучший план — вообще никакого плана.","category":"РАЙ"},{"id":79,"title":"ТУРИСТИЧЕСКАЯ МЕЧТА","text":"Одна твоя давняя хотелка станет реальностью.","category":"РАЙ"},{"id":80,"title":"ОТКРЫТКА","text":"В этом году ты окажешься в месте, фотографию которого захочется отправить всем.","category":"РАЙ"},{"id":81,"title":"АННУЛЯЦИЯ","text":"Что-то обязательно пойдёт не по плану. Но ты разрулишь это быстрее, чем успеешь нормально испугаться.","category":"ЧЁРНЫЙ ОРАКУЛ"},{"id":82,"title":"ОВЕРБУКИНГ","text":"Вселенная проверит твою нервную систему. Зато история потом будет легендарной.","category":"ЧЁРНЫЙ ОРАКУЛ"},{"id":83,"title":"ТУРИСТ ИЗ АДА","text":"Ты встретишь его. Но после него все остальные покажутся зайчиками.","category":"ЧЁРНЫЙ ОРАКУЛ"},{"id":84,"title":"НОЧНОЕ СООБЩЕНИЕ","text":"«Извините, что так поздно…» Да. Именно сегодня.","category":"ЧЁРНЫЙ ОРАКУЛ"},{"id":85,"title":"ДОПЛАТА","text":"Цена изменится после того, как турист скажет: «Всё, берём».","category":"ЧЁРНЫЙ ОРАКУЛ"},{"id":86,"title":"ПЕРЕДУМАЛИ","text":"Они передумают. А потом передумают передумать.","category":"ЧЁРНЫЙ ОРАКУЛ"},{"id":87,"title":"САМ НАШЁЛ","text":"Турист найдёт тур дешевле. Где-то. Когда-то. У кого-то. Но обязательно расскажет тебе.","category":"ЧЁРНЫЙ ОРАКУЛ"},{"id":88,"title":"ПЯТЬ МИНУТ ДО МОРЯ","text":"Для туриста окажется, что пять минут пешком — это слишком далеко.","category":"ЧЁРНЫЙ ОРАКУЛ"},{"id":89,"title":"WIFI","text":"В этом году качество Wi-Fi снова будет важнее красоты пляжа.","category":"ЧЁРНЫЙ ОРАКУЛ"},{"id":90,"title":"МЕДУЗЫ","text":"Тебя спросят, есть ли в море медузы. Карты не отвечают.","category":"ЧЁРНЫЙ ОРАКУЛ"},{"id":91,"title":"КОРОЛЕВА ПРОДАЖ","text":"Ты входишь в период, когда продажи начинают получаться не случайно, а потому что ты действительно стала сильнее.","category":"ЛЕГЕНДАРНАЯ"},{"id":92,"title":"ИМПЕРАТРИЦА МАЛЬДИВ","text":"Ты будешь продавать другим то, что однажды позволишь себе сама.","category":"ЛЕГЕНДАРНАЯ"},{"id":93,"title":"ИМПЕРАТОР КОМИССИИ","text":"Твой доход перестанет зависеть от случайности. Ты сама начнёшь создавать большие продажи.","category":"ЛЕГЕНДАРНАЯ"},{"id":94,"title":"КОЛЕСО БРОНИРОВАНИЯ","text":"Всё закрутится. Заявки, оплаты, рекомендации. Главное — не забывай пить воду.","category":"ЛЕГЕНДАРНАЯ"},{"id":95,"title":"МАГ","text":"Ты уже знаешь больше, чем думаешь. Доверяй своим решениям.","category":"ЛЕГЕНДАРНАЯ"},{"id":96,"title":"ЗВЕЗДА","text":"Твой самый сильный год ещё впереди.","category":"ЛЕГЕНДАРНАЯ"},{"id":97,"title":"МИР","text":"Один важный цикл закончится. И начнётся новый.","category":"ЛЕГЕНДАРНАЯ"},{"id":98,"title":"СОЛНЦЕ","text":"Будет момент, когда ты оглянешься назад и скажешь: «Вот ради этого всё и было».","category":"ЛЕГЕНДАРНАЯ"},{"id":99,"title":"ФОРТУНА","text":"Тебе выпадет шанс, который нельзя будет просчитать заранее. Просто окажись готова его взять.","category":"ЛЕГЕНДАРНАЯ"},{"id":100,"title":"ТВОЙ ГОД","text":"Следующий День туризма ты встретишь в точке, о которой сейчас можешь только мечтать.","category":"ЛЕГЕНДАРНАЯ"},{"id":101,"title":"БЕЛАЯ ПОЛОСА","text":"Всё начнёт складываться подозрительно хорошо. Не пугайся. Это не подвох.","category":"СУПЕРКАРТА"},{"id":102,"title":"БОЛЬШАЯ МЕЧТА","text":"То, что сейчас кажется слишком большим, станет твоей новой нормой.","category":"СУПЕРКАРТА"},{"id":103,"title":"ДЕНЬГИ ЛЮБЯТ ТЕБЯ","text":"В ближайшие 12 месяцев твои банковские уведомления станут приятнее.","category":"СУПЕРКАРТА"},{"id":104,"title":"НЕБО НЕ ПРЕДЕЛ","text":"Ты сама ещё не знаешь, насколько далеко можешь зайти.","category":"СУПЕРКАРТА"},{"id":105,"title":"СВОБОДА","text":"Ты научишься работать так, чтобы работа больше не управляла всей твоей жизнью.","category":"СУПЕРКАРТА"},{"id":106,"title":"СВОИ ЛЮДИ","text":"Рядом станет больше людей, с которыми можно не только работать, но и смеяться до слёз.","category":"СУПЕРКАРТА"},{"id":107,"title":"СПАСИБО","text":"Ты получишь сообщение от туриста, которое напомнит, зачем вообще выбрала эту профессию.","category":"СУПЕРКАРТА"},{"id":108,"title":"ГОРДОСТЬ","text":"Ты посмотришь на свой год и поймёшь: «А я, оказывается, охуенно выросла».","category":"СУПЕРКАРТА"},{"id":109,"title":"ВСЁ ПОЛУЧИТСЯ","text":"То, над чем ты сейчас работаешь и сомневаешься, даст результат. Не бросай раньше времени.","category":"СУПЕРКАРТА"},{"id":110,"title":"ДЖЕКПОТ","text":"Это не предсказание. Ты вытянула одну из самых редких карт Турагентского Оракула. Покажи эту карту организаторам — тебе положен подарок.","category":"ДЖЕКПОТ"}];
+let current=null;
+const DAY_KEY='nedbay_oracle_day_lux_v1';
+const CARD_KEY='nedbay_oracle_card_lux_v1';
+
+function localDay(){
+  const d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function getSaved(){
+  try{
+    if(localStorage.getItem(DAY_KEY)===localDay()){
+      const id=Number(localStorage.getItem(CARD_KEY));
+      return cards.find(c=>c.id===id)||null;
+    }
+  }catch(e){}
+  return null;
+}
+function saveCard(c){
+  try{
+    localStorage.setItem(DAY_KEY,localDay());
+    localStorage.setItem(CARD_KEY,String(c.id));
+  }catch(e){}
+}
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='draw') updateLock();
+  window.scrollTo(0,0);
+}
+function updateLock(){
+  const saved=getSaved(),btn=document.getElementById('drawBtn'),t=document.getElementById('lockText');
+  if(saved){
+    btn.disabled=true;
+    btn.textContent='КАРТА УЖЕ ВЫТЯНУТА';
+    t.innerHTML='Сегодня оракул уже всё сказал.<br>Возвращайся завтра. 🔮';
+  }else{
+    btn.disabled=false;
+    btn.textContent='ВЫТЯНУТЬ КАРТУ';
+    t.innerHTML='Судьба любит смелых<br>и турагентов с чувством юмора.';
+  }
+}
+function drawCard(){
+  const saved=getSaved();
+  if(saved){current=saved;render();return}
+  const deck=document.getElementById('deck');
+  deck.classList.remove('shuffle'); void deck.offsetWidth; deck.classList.add('shuffle');
+  const btn=document.getElementById('drawBtn'); btn.disabled=true;
+  setTimeout(()=>{
+    current=cards[Math.floor(Math.random()*cards.length)];
+    saveCard(current);
+    render();
+  },800);
+}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function render(){
+  document.getElementById('resultCard').innerHTML=`
+    <div class="result-card"><div class="result-inner">
+      <div><div class="cat">${esc(current.category)}</div><div class="result-title">${esc(current.title)}</div></div>
+      <div class="divider">✦</div>
+      <div class="result-text">${esc(current.text)}</div>
+      <div class="nam">НАМ МОЖНО</div>
+    </div></div>`;
+  show('result');
+}
+async function shareCard(){
+  const text=`🔮 Оракул банды Недбай
+
+Мне сегодня выпала карта «${current.title}».
+
+${current.text}
+
+НАМ МОЖНО ✈️
+
+С днём туризма от @tatakomotako`;
+  if(navigator.share){
+    try{await navigator.share({title:'Оракул банды Недбай',text});return}catch(e){}
+  }
+  try{
+    await navigator.clipboard.writeText(text);
+    alert('Карта скопирована. Выложи в сторис и отметь @tatakomotako ❤️');
+  }catch(e){ alert(text) }
+}
+
+document.getElementById('enter').addEventListener('click',()=>show('warn'));
+document.getElementById('ready').addEventListener('click',()=>show('draw'));
+document.getElementById('drawBtn').addEventListener('click',drawCard);
+document.getElementById('shareBtn').addEventListener('click',shareCard);
+</script>
+</body>
+</html>
